@@ -1,0 +1,192 @@
+package unit
+
+import (
+	"erp-system/internal/domain"
+	"erp-system/internal/usecases"
+	"erp-system/tests/mocks"
+	"testing"
+	"time"
+)
+
+func TestCustomerUseCase_CreateCustomer_Success(t *testing.T) {
+	customerRepo := mocks.NewMockCustomerRepository()
+	activityRepo := mocks.NewMockCustomerActivityRepository()
+	docRepo := mocks.NewMockCustomerDocumentRepository()
+	notifService := mocks.NewMockNotificationService()
+	customerUC := usecases.NewCustomerUseCase(customerRepo, activityRepo, docRepo, notifService)
+
+	req := domain.CreateCustomerRequest{
+		Name:        "Test Customer",
+		Email:       "test@customer.com",
+		Phone:       "01234567890",
+		Type:        "regular",
+		CreditLimit: 10000,
+	}
+
+	customer, err := customerUC.CreateCustomer(req, 1)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got: %v", err)
+	}
+	if customer == nil {
+		t.Fatal("Expected customer, got nil")
+	}
+	if customer.Name != req.Name {
+		t.Errorf("Expected name %s, got %s", req.Name, customer.Name)
+	}
+	if customer.Status != "active" {
+		t.Errorf("Expected status 'active', got %s", customer.Status)
+	}
+	if customer.Code == "" {
+		t.Error("Expected customer code to be generated")
+	}
+}
+
+func TestCustomerUseCase_GetCustomer_Success(t *testing.T) {
+	customerRepo := mocks.NewMockCustomerRepository()
+	activityRepo := mocks.NewMockCustomerActivityRepository()
+	docRepo := mocks.NewMockCustomerDocumentRepository()
+	notifService := mocks.NewMockNotificationService()
+	customerUC := usecases.NewCustomerUseCase(customerRepo, activityRepo, docRepo, notifService)
+
+	testCustomer := &domain.Customer{
+		ID:    1,
+		Name:  "Test Customer",
+		Email: "test@customer.com",
+	}
+	customerRepo.Customers[1] = testCustomer
+
+	customer, err := customerUC.GetCustomer(1)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got: %v", err)
+	}
+	if customer.ID != testCustomer.ID {
+		t.Errorf("Expected ID %d, got %d", testCustomer.ID, customer.ID)
+	}
+}
+
+func TestCustomerUseCase_AddActivity_Success(t *testing.T) {
+	customerRepo := mocks.NewMockCustomerRepository()
+	activityRepo := mocks.NewMockCustomerActivityRepository()
+	docRepo := mocks.NewMockCustomerDocumentRepository()
+	notifService := mocks.NewMockNotificationService()
+	customerUC := usecases.NewCustomerUseCase(customerRepo, activityRepo, docRepo, notifService)
+
+	testCustomer := &domain.Customer{
+		ID:    1,
+		Name:  "Test Customer",
+		Phone: "01234567890",
+	}
+	customerRepo.Customers[1] = testCustomer
+
+	req := domain.AddActivityRequest{
+		Type:        "note",
+		Description: "Test note",
+	}
+
+	activity, err := customerUC.AddActivity(1, req, 1)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got: %v", err)
+	}
+	if activity == nil {
+		t.Fatal("Expected activity, got nil")
+	}
+	if activity.Type != "note" {
+		t.Errorf("Expected type 'note', got %s", activity.Type)
+	}
+}
+
+func TestCustomerUseCase_AddActivity_Reminder(t *testing.T) {
+	customerRepo := mocks.NewMockCustomerRepository()
+	activityRepo := mocks.NewMockCustomerActivityRepository()
+	docRepo := mocks.NewMockCustomerDocumentRepository()
+	notifService := mocks.NewMockNotificationService()
+	customerUC := usecases.NewCustomerUseCase(customerRepo, activityRepo, docRepo, notifService)
+
+	testCustomer := &domain.Customer{
+		ID:                1,
+		Name:              "Test Customer",
+		Phone:             "01234567890",
+		IsWhatsAppEnabled: true,
+	}
+	customerRepo.Customers[1] = testCustomer
+
+	futureDate := time.Now().Add(24 * time.Hour)
+	req := domain.AddActivityRequest{
+		Type:         "reminder",
+		Description:  "Follow up call",
+		ReminderDate: &futureDate,
+	}
+
+	activity, err := customerUC.AddActivity(1, req, 1)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got: %v", err)
+	}
+	if activity.Type != "reminder" {
+		t.Errorf("Expected type 'reminder', got %s", activity.Type)
+	}
+	if activity.ReminderDate == nil {
+		t.Fatal("Expected ReminderDate to be set")
+	}
+	if activity.IsCompleted {
+		t.Error("Expected IsCompleted to be false")
+	}
+}
+
+func TestCustomerUseCase_GetActivities_Success(t *testing.T) {
+	customerRepo := mocks.NewMockCustomerRepository()
+	activityRepo := mocks.NewMockCustomerActivityRepository()
+	docRepo := mocks.NewMockCustomerDocumentRepository()
+	notifService := mocks.NewMockNotificationService()
+	customerUC := usecases.NewCustomerUseCase(customerRepo, activityRepo, docRepo, notifService)
+
+	activities := []domain.CustomerActivity{
+		{ID: 1, CustomerID: 1, Type: "note", Description: "First note"},
+		{ID: 2, CustomerID: 1, Type: "call", Description: "Made a call"},
+		{ID: 3, CustomerID: 1, Type: "meeting", Description: "Had a meeting"},
+	}
+	activityRepo.Activities[1] = activities
+
+	result, err := customerUC.GetActivities(1)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got: %v", err)
+	}
+	if len(result) != 3 {
+		t.Errorf("Expected 3 activities, got %d", len(result))
+	}
+}
+
+func TestCustomerUseCase_UploadDocument_Success(t *testing.T) {
+	customerRepo := mocks.NewMockCustomerRepository()
+	activityRepo := mocks.NewMockCustomerActivityRepository()
+	docRepo := mocks.NewMockCustomerDocumentRepository()
+	notifService := mocks.NewMockNotificationService()
+	customerUC := usecases.NewCustomerUseCase(customerRepo, activityRepo, docRepo, notifService)
+
+	testCustomer := &domain.Customer{
+		ID:   1,
+		Name: "Test Customer",
+	}
+	customerRepo.Customers[1] = testCustomer
+
+	req := domain.UploadDocumentRequest{
+		Title:    "Contract",
+		FilePath: "/uploads/documents/contract.pdf",
+	}
+
+	doc, err := customerUC.UploadDocument(1, req, 1)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got: %v", err)
+	}
+	if doc == nil {
+		t.Fatal("Expected document, got nil")
+	}
+	if doc.Title != "Contract" {
+		t.Errorf("Expected title 'Contract', got %s", doc.Title)
+	}
+}

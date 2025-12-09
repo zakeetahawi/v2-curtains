@@ -1,0 +1,35 @@
+# Backend
+backend/bin/
+backend/erp.db
+backend/erp.db-shm
+backend/erp.db-wal
+backend/uploads/documents/*
+!backend/uploads/documents/.gitkeep
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temp files
+*.tmp
+*.temp
+.cache/
