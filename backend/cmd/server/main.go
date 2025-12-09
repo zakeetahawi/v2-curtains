@@ -51,6 +51,7 @@ func main() {
 	productionUseCase := usecases.NewProductionUseCase(productionRepo)
 	settingsUseCase := usecases.NewSettingsUseCase(settingsRepo)
 	notifUseCase := usecases.NewNotificationUseCase(notifRepo)
+	dashboardUseCase := usecases.NewDashboardUsecase(repositories.NewDashboardRepository(db))
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(authUseCase)
@@ -62,6 +63,7 @@ func main() {
 	reportsHandler := handlers.NewReportsHandler(reportsRepo)
 	settingsHandler := handlers.NewSettingsHandler(settingsUseCase)
 	notifHandler := handlers.NewNotificationHandler(notifUseCase)
+	dashboardHandler := handlers.NewDashboardHandler(dashboardUseCase)
 
 	// Setup Gin
 	gin.SetMode(gin.ReleaseMode)
@@ -93,6 +95,7 @@ func main() {
 	routes.SetupReportsRoutes(router, reportsHandler)
 	routes.SetupSettingsRoutes(router, settingsHandler)
 	routes.SetupNotificationRoutes(router, notifHandler)
+	routes.SetupDashboardRoutes(router, dashboardHandler)
 
 	// Start Background Workers
 	worker.StartReminderWorker(db, notifService)

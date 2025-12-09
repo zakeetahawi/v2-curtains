@@ -108,5 +108,59 @@ const CustomersState = {
     showDeleteModal: false,
 };
 
+// Export customers to Excel
+window.exportCustomersToExcel = async function() {
+    try {
+        const { exportToExcel, formatCustomersForExport } = await import('./export-utils.js');
+        
+        // Get all customers (no pagination limit for export)
+        const result = await CustomersAPI.getAll(1, 1000, CustomersState.search);
+        
+        if (result.success && result.data.customers) {
+            const formattedData = formatCustomersForExport(result.data.customers);
+            exportToExcel(formattedData, 'customers', 'Customers List');
+            
+            // Close export menu
+            document.getElementById('export-menu')?.classList.add('hidden');
+        } else {
+            alert('No customers data to export');
+        }
+    } catch (error) {
+        console.error('Export to Excel failed:', error);
+        alert('Failed to export customers to Excel');
+    }
+}
+
+// Export customers to CSV
+window.exportCustomersToCSV = async function() {
+    try {
+        const { exportToCSV, formatCustomersForExport } = await import('./export-utils.js');
+        
+        // Get all customers (no pagination limit for export)
+        const result = await CustomersAPI.getAll(1, 1000, CustomersState.search);
+        
+        if (result.success && result.data.customers) {
+            const formattedData = formatCustomersForExport(result.data.customers);
+            exportToCSV(formattedData, 'customers');
+            
+            // Close export menu
+            document.getElementById('export-menu')?.classList.add('hidden');
+        } else {
+            alert('No customers data to export');
+        }
+    } catch (error) {
+        console.error('Export to CSV failed:', error);
+        alert('Failed to export customers to CSV');
+    }
+}
+
+// Toggle export menu
+window.toggleExportMenu = function() {
+    const menu = document.getElementById('export-menu');
+    if (menu) {
+        menu.classList.toggle('hidden');
+    }
+}
+
 // Export for use in main.js
 export { CustomersAPI, CustomersState };

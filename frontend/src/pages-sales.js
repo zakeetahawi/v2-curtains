@@ -10,12 +10,17 @@ const SalesPage = () => `
         <h1 class="text-3xl font-bold text-gray-900">${t('sales.title')}</h1>
         <p class="text-gray-600 mt-1">Manage sales orders and invoices</p>
       </div>
-      <button onclick="openOrderModal()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-lg">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
-        ${t('sales.addNew')}
-      </button>
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSalesExportMenu()" class="px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all flex items-center gap-2 shadow-lg">
+          <span>📥 Export</span>
+        </button>
+        <button onclick="openOrderModal()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          ${t('sales.addNew')}
+        </button>
+      </div>
     </div>
 
     <!-- Filters -->

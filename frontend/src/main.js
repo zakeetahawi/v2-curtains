@@ -8,6 +8,7 @@ import { NotificationsAPI } from './notifications.js'
 
 // Dynamic module loader - for lazy loading heavy modules
 import {
+  loadDashboardStatsModule,
   loadCustomersModule,
   loadCustomersPageModule,
   loadCustomerProfileModule,
@@ -254,39 +255,8 @@ const DashboardPage = () => `
         </div>
       </div>
 
-      <!-- Stats Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        ${StatsCard(t('dashboard.stats.totalSales'), formatCurrency(245000), '+12.5%', 'up', 'blue')}
-        ${StatsCard(t('dashboard.stats.newCustomers'), '156', '+8.2%', 'up', 'green')}
-        ${StatsCard(t('dashboard.stats.activeOrders'), '89', '-3.1%', 'down', 'yellow')}
-        ${StatsCard(t('dashboard.stats.totalRevenue'), formatCurrency(1200000), '+15.3%', 'up', 'purple')}
-      </div>
-
-      <!-- Charts Row -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white rounded-2xl shadow-lg p-6 overflow-hidden">
-          <h3 class="text-lg font-bold text-gray-900 mb-4">${t('dashboard.charts.salesStats')}</h3>
-          <div class="h-64 flex items-end justify-between gap-2 overflow-hidden">
-            ${Array.from({ length: 7 }, (_, i) => {
-  const height = Math.random() * 100 + 50;
-  return `<div class="flex-1 bg-gradient-to-t from-indigo-500 to-indigo-300 rounded-t-lg transition-all hover:scale-105" style="height: ${height}%"></div>`;
-}).join('')}
-          </div>
-          <div class="flex justify-between mt-4 text-xs text-gray-600">
-            <span>${t('days.saturday')}</span><span>${t('days.sunday')}</span><span>${t('days.monday')}</span><span>${t('days.tuesday')}</span><span>${t('days.wednesday')}</span><span>${t('days.thursday')}</span><span>${t('days.friday')}</span>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 overflow-hidden">
-          <h3 class="text-lg font-bold text-gray-900 mb-4">${t('dashboard.charts.productDistribution')}</h3>
-          <div class="flex items-center justify-center h-64 overflow-hidden">
-            <div class="relative w-48 h-48">
-              <svg class="w-full h-full transform -rotate-90">
-                <circle cx="96" cy="96" r="80" fill="none" stroke="#e5e7eb" stroke-width="16"/>
-                <circle cx="96" cy="96" r="80" fill="none" stroke="#6366f1" stroke-width="16" 
-                  stroke-dasharray="251.2 251.2" stroke-dashoffset="62.8" stroke-linecap="round"/>
-                <circle cx="96" cy="96" r="80" fill="none" stroke="#10b981" stroke-width="16"
-                  stroke-dasharray="251.2 251.2" stroke-dashoffset="188.4" stroke-linecap="round"/>
+      <!-- Dashboard Stats Container (Real-time data from API) -->
+      <div id="dashboard-stats-container"></div>
               </svg>
               <div class="absolute inset-0 flex items-center justify-center">
                 <div class="text-center">
@@ -1055,6 +1025,15 @@ async function render() {
     document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
   } else if (AppState.currentPage === 'dashboard') {
     app.innerHTML = DashboardPage();
+    
+    // Load and render real-time dashboard stats from API
+    const { renderDashboardStats, startAutoRefresh } = await loadDashboardStatsModule();
+    const dashboardStatsContainer = document.getElementById('dashboard-stats-container');
+    
+    if (dashboardStatsContainer) {
+      await renderDashboardStats(dashboardStatsContainer);
+      startAutoRefresh(() => renderDashboardStats(dashboardStatsContainer), 30000);
+    }
   } else if (AppState.currentPage === 'customers') {
     // Load page module dynamically
     const { CustomersPage } = await loadCustomersPageModule();
@@ -1191,6 +1170,9 @@ window.switchSettingsSection = (sectionName) => {
 };
 
 window.saveSettings = async () => {
+  // Load SettingsAPI dynamically
+  const { SettingsAPI } = await loadSettingsModule();
+  
   // 1. Upload Logo if selected
   const logoInput = document.getElementById('setting_company_logo');
   if (logoInput && logoInput.files.length > 0) {

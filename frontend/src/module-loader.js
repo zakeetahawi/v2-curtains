@@ -53,6 +53,13 @@ export async function loadModule(moduleName, importFn) {
 }
 
 /**
+ * Load Dashboard Stats Module (lazy)
+ */
+export async function loadDashboardStatsModule() {
+  return loadModule('dashboard-stats', () => import('./dashboard-stats.js'));
+}
+
+/**
  * Load Customers Module (lazy)
  */
 export async function loadCustomersModule() {

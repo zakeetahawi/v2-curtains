@@ -10,12 +10,45 @@ const CustomersPage = () => `
         <h1 class="text-3xl font-bold text-gray-900">${t('customers.title')}</h1>
         <p class="text-gray-600 mt-1">Manage your customers and contacts</p>
       </div>
-      <button onclick="openCustomerModal()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-lg">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
-        ${t('customers.addNew')}
-      </button>
+      <div class="flex items-center gap-3">
+        <div class="relative inline-block">
+          <button onclick="toggleExportMenu()" 
+                  class="flex items-center gap-2 px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all shadow-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Export</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          <div id="export-menu" class="hidden absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+            <button onclick="exportCustomersToExcel()" 
+                    class="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100 transition-colors">
+              <span class="text-2xl">📊</span>
+              <span class="font-medium">Export to Excel</span>
+            </button>
+            <button onclick="exportCustomersToCSV()" 
+                    class="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100 transition-colors">
+              <span class="text-2xl">📄</span>
+              <span class="font-medium">Export to CSV</span>
+            </button>
+            <button onclick="window.print()" 
+                    class="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center gap-3 transition-colors">
+              <span class="text-2xl">🖨️</span>
+              <span class="font-medium">Print</span>
+            </button>
+          </div>
+        </div>
+        
+        <button onclick="openCustomerModal()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          ${t('customers.addNew')}
+        </button>
+      </div>
     </div>
 
     <!-- Search Bar -->
