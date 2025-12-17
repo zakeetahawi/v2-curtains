@@ -68,6 +68,24 @@ func (h *ProductionHandler) GetOrder(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "data": order})
 }
 
+func (h *ProductionHandler) UpdateOrderStatus(c *gin.Context) {
+	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
+	var req struct {
+		Status string `json:"status" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": err.Error()})
+		return
+	}
+
+	if err := h.productionUseCase.UpdateOrderStatus(uint(id), req.Status); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "Order status updated successfully"})
+}
+
 func (h *ProductionHandler) GetBOM(c *gin.Context) {
 	productID, _ := strconv.ParseUint(c.Param("productId"), 10, 32)
 	bom, err := h.productionUseCase.GetBOM(uint(productID))

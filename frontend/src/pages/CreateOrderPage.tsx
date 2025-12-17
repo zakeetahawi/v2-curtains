@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Card, Form, Select, Button, Space, Table, InputNumber,
-    message, Typography, Row, Col
+    App, Typography, Row, Col
 } from 'antd';
 import {
     ArrowLeftOutlined, PlusOutlined, DeleteOutlined, SaveOutlined
@@ -25,6 +25,7 @@ interface OrderItem {
 }
 
 export default function CreateOrderPage() {
+    const { message } = App.useApp();
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [customers, setCustomers] = useState<Customer[]>([]);
@@ -102,6 +103,7 @@ export default function CreateOrderPage() {
         try {
             const orderData = {
                 customer_id: selectedCustomer,
+                order_date: new Date().toISOString(),
                 items: orderItems.map(item => ({
                     product_id: item.product_id,
                     quantity: item.quantity,

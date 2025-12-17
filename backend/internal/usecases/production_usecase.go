@@ -45,6 +45,10 @@ func (uc *ProductionUseCase) GetOrder(id uint) (*domain.ProductionOrder, error) 
 	return uc.productionRepo.FindOrderByID(id)
 }
 
+func (uc *ProductionUseCase) UpdateOrderStatus(id uint, status string) error {
+	return uc.productionRepo.UpdateOrderStatus(id, status)
+}
+
 func (uc *ProductionUseCase) GetBOM(productID uint) ([]domain.BillOfMaterials, error) {
 	return uc.productionRepo.FindBOMByProductID(productID)
 }

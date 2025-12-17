@@ -36,17 +36,6 @@ func (uc *SalesUseCase) CreateOrder(req *domain.CreateOrderRequest, userID uint)
 
 	var totalAmount, taxAmount, discountAmount float64
 
-	for i, itemReq := range req.Items {
-		total := itemReq.Quantity * itemReq.UnitPrice
-		itemDiscount := total * (itemReq.Discount / 100)
-		itemTax := (total - itemDiscount) * (itemReq.TaxRate / 100)
-		itemTotal := total - itemDiscount + itemTax
-
-		order.Items[i].Total = itemTotal // Assuming items are init
-
-		// Better: reconstruct items list
-	}
-
 	// Let's rewrite the loop properly
 	var items []domain.SalesOrderItem
 	for _, itemReq := range req.Items {

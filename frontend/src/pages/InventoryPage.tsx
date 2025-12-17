@@ -134,7 +134,7 @@ export default function InventoryPage() {
                 const percentage = Math.min((stock / ((record.min_stock_level || 10) * 2)) * 100, 100);
                 const status = getStockStatus(stock, record.min_stock_level || 0);
                 return (
-                    <Space direction="vertical" style={{ width: '100%' }} size="small">
+                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 8 }}>
                         <div style={{
                             fontSize: 16,
                             fontWeight: 600,
@@ -149,10 +149,11 @@ export default function InventoryPage() {
                                 status.color === 'error' ? '#ff4d4f' :
                                     status.color === 'warning' ? '#faad14' : '#52c41a'
                             }
-                            trailColor="#f0f0f0"
-                            strokeWidth={8}
+                            // @ts-ignore
+                            railColor="#f0f0f0"
+                            size={['100%', 8]}
                         />
-                    </Space>
+                    </div>
                 );
             },
         },

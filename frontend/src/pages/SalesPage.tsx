@@ -174,7 +174,8 @@ export default function SalesPage() {
                             value={todaySales}
                             prefix={<DollarOutlined />}
                             suffix="جنيه"
-                            valueStyle={{ color: '#3f8600', fontSize: 24 }}
+                            // @ts-ignore
+                            formatter={(value) => <span style={{ color: '#3f8600', fontSize: 24 }}>{value}</span>}
                         />
                     </Card>
                 </Col>
@@ -184,7 +185,8 @@ export default function SalesPage() {
                             title="عدد الطلبات"
                             value={todayOrders}
                             prefix={<ShoppingCartOutlined />}
-                            valueStyle={{ color: '#1890ff', fontSize: 24 }}
+                            // @ts-ignore
+                            formatter={(value) => <span style={{ color: '#1890ff', fontSize: 24 }}>{value}</span>}
                         />
                     </Card>
                 </Col>
@@ -195,7 +197,8 @@ export default function SalesPage() {
                             value={Math.round(avgOrderValue)}
                             prefix={<DollarOutlined />}
                             suffix="جنيه"
-                            valueStyle={{ fontSize: 24 }}
+                            // @ts-ignore
+                            formatter={(value) => <span style={{ fontSize: 24 }}>{value}</span>}
                         />
                     </Card>
                 </Col>
@@ -205,7 +208,8 @@ export default function SalesPage() {
                             title="إجمالي الطلبات"
                             value={total}
                             prefix={<ShoppingCartOutlined />}
-                            valueStyle={{ color: '#722ed1', fontSize: 24 }}
+                            // @ts-ignore
+                            formatter={(value) => <span style={{ color: '#722ed1', fontSize: 24 }}>{value}</span>}
                         />
                     </Card>
                 </Col>

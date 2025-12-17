@@ -62,7 +62,7 @@ export default function DashboardPage() {
                             title="إجمالي المبيعات"
                             value={245000}
                             precision={2}
-                            valueStyle={{ color: '#3f8600' }}
+                            styles={{ content: { color: '#3f8600' } }}
                             prefix={<DollarOutlined />}
                             suffix="جنيه"
                         />
@@ -77,7 +77,7 @@ export default function DashboardPage() {
                         <Statistic
                             title="عملاء جدد"
                             value={156}
-                            valueStyle={{ color: '#1890ff' }}
+                            styles={{ content: { color: '#1890ff' } }}
                             prefix={<UserOutlined />}
                         />
                         <div style={{ marginTop: 8, color: '#1890ff' }}>
@@ -91,7 +91,7 @@ export default function DashboardPage() {
                         <Statistic
                             title="طلبات نشطة"
                             value={89}
-                            valueStyle={{ color: '#faad14' }}
+                            styles={{ content: { color: '#faad14' } }}
                             prefix={<ShoppingOutlined />}
                         />
                         <div style={{ marginTop: 8, color: '#cf1322' }}>
@@ -106,7 +106,7 @@ export default function DashboardPage() {
                             title="إجمالي الإيرادات"
                             value={1200000}
                             precision={2}
-                            valueStyle={{ color: '#722ed1' }}
+                            styles={{ content: { color: '#722ed1' } }}
                             prefix={<DollarOutlined />}
                             suffix="جنيه"
                         />

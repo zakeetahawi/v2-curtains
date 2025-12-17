@@ -14,6 +14,7 @@ func SetupProductionRoutes(router *gin.Engine, productionHandler *handlers.Produ
 			production.GET("/orders", productionHandler.GetOrders)
 			production.POST("/orders", productionHandler.CreateOrder)
 			production.GET("/orders/:id", productionHandler.GetOrder)
+			production.PATCH("/orders/:id/status", productionHandler.UpdateOrderStatus)
 			production.GET("/bom/:productId", productionHandler.GetBOM)
 		}
 	}
