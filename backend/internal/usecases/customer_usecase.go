@@ -155,3 +155,14 @@ func (uc *CustomerUseCase) AddDocument(customerID uint, title, path, fileType st
 func (uc *CustomerUseCase) GetDocuments(customerID uint) ([]domain.CustomerDocument, error) {
 	return uc.docRepo.FindByCustomerID(customerID)
 }
+
+// ToggleActivityNotification enables/disables notification for an activity
+func (uc *CustomerUseCase) ToggleActivityNotification(activityID uint, enabled bool) error {
+	activity, err := uc.activityRepo.FindByID(activityID)
+	if err != nil {
+		return err
+	}
+
+	activity.NotificationEnabled = enabled
+	return uc.activityRepo.Update(activity)
+}

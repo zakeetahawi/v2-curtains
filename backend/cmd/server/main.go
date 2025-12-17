@@ -38,6 +38,7 @@ func main() {
 	loginAttemptRepo := repositories.NewLoginAttemptRepository(db)
 	lockoutRepo := repositories.NewAccountLockoutRepository(db)
 	refreshTokenRepo := repositories.NewRefreshTokenRepository(db)
+	branchRepo := repositories.NewBranchRepository(db)
 
 	// Services
 	notifService := services.NewNotificationService(settingsRepo)
@@ -52,6 +53,8 @@ func main() {
 	settingsUseCase := usecases.NewSettingsUseCase(settingsRepo)
 	notifUseCase := usecases.NewNotificationUseCase(notifRepo)
 	dashboardUseCase := usecases.NewDashboardUsecase(repositories.NewDashboardRepository(db))
+	branchUseCase := usecases.NewBranchUseCase(branchRepo, customerRepo)
+	userUseCase := usecases.NewUserUseCase(userRepo)
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(authUseCase)
@@ -64,6 +67,8 @@ func main() {
 	settingsHandler := handlers.NewSettingsHandler(settingsUseCase)
 	notifHandler := handlers.NewNotificationHandler(notifUseCase)
 	dashboardHandler := handlers.NewDashboardHandler(dashboardUseCase)
+	branchHandler := handlers.NewBranchHandler(branchUseCase)
+	userHandler := handlers.NewUserHandler(userUseCase)
 
 	// Setup Gin
 	gin.SetMode(gin.ReleaseMode)
@@ -96,6 +101,11 @@ func main() {
 	routes.SetupSettingsRoutes(router, settingsHandler)
 	routes.SetupNotificationRoutes(router, notifHandler)
 	routes.SetupDashboardRoutes(router, dashboardHandler)
+	routes.SetupBranchRoutes(router, branchHandler)
+	routes.SetupUserRoutes(router, userHandler)
+
+	// Ensure main branch exists
+	branchUseCase.EnsureMainBranchExists()
 
 	// Start Background Workers
 	worker.StartReminderWorker(db, notifService)

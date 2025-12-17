@@ -17,6 +17,7 @@ type Product struct {
 	SellingPrice  float64    `json:"selling_price" gorm:"default:0"`
 	ReorderLevel  int        `json:"reorder_level" gorm:"default:10"`
 	MaxStockLevel int        `json:"max_stock_level"`
+	StockQuantity int        `json:"stock_quantity" gorm:"default:0"`
 	IsActive      bool       `json:"is_active" gorm:"default:true"`
 	CreatedAt     time.Time  `json:"created_at"`
 	UpdatedAt     time.Time  `json:"updated_at"`
@@ -55,6 +56,7 @@ type CreateProductRequest struct {
 	SellingPrice  float64 `json:"selling_price" binding:"gte=0"`
 	ReorderLevel  int     `json:"reorder_level"`
 	MaxStockLevel int     `json:"max_stock_level"`
+	StockQuantity int     `json:"stock_quantity" binding:"gte=0"`
 }
 
 // UpdateProductRequest
@@ -66,5 +68,6 @@ type UpdateProductRequest struct {
 	SellingPrice  float64 `json:"selling_price"`
 	ReorderLevel  int     `json:"reorder_level"`
 	MaxStockLevel int     `json:"max_stock_level"`
+	StockQuantity *int    `json:"stock_quantity"`
 	IsActive      *bool   `json:"is_active"`
 }

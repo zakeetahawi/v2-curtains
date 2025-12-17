@@ -21,6 +21,7 @@ func SetupCustomerRoutes(router *gin.Engine, customerHandler *handlers.CustomerH
 			// CRM Activities
 			customers.GET("/:id/activities", customerHandler.GetActivities)
 			customers.POST("/:id/activities", customerHandler.AddActivity)
+			customers.PUT("/activities/:activityId/toggle-notification", customerHandler.ToggleActivityNotification)
 
 			// Documents
 			customers.GET("/:id/documents", customerHandler.GetDocuments)

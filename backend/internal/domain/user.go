@@ -12,6 +12,8 @@ type User struct {
 	PasswordHash string     `json:"-" gorm:"not null"`
 	RoleID       uint       `json:"role_id" gorm:"not null;default:4"`
 	Role         *Role      `json:"role,omitempty" gorm:"foreignKey:RoleID"`
+	BranchID     *uint      `json:"branch_id"` // Branch assignment
+	Branch       *Branch    `json:"branch,omitempty" gorm:"foreignKey:BranchID"`
 	IsActive     bool       `json:"is_active" gorm:"default:true"`
 	LastLoginAt  *time.Time `json:"last_login_at,omitempty"`
 	CreatedAt    time.Time  `json:"created_at"`
@@ -55,4 +57,24 @@ type LoginResponse struct {
 	User         *User  `json:"user"`
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
+}
+
+// CreateUserRequest represents user creation request
+type CreateUserRequest struct {
+	Username string `json:"username" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required,min=6"`
+	RoleID   uint   `json:"role_id" binding:"required"`
+	BranchID *uint  `json:"branch_id"`
+	IsActive bool   `json:"is_active"`
+}
+
+// UpdateUserRequest represents user update request
+type UpdateUserRequest struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password,omitempty"` // Optional
+	RoleID   uint   `json:"role_id"`
+	BranchID *uint  `json:"branch_id"`
+	IsActive bool   `json:"is_active"`
 }

@@ -25,6 +25,7 @@ func (uc *InventoryUseCase) CreateProduct(req *domain.CreateProductRequest) (*do
 		SellingPrice:  req.SellingPrice,
 		ReorderLevel:  req.ReorderLevel,
 		MaxStockLevel: req.MaxStockLevel,
+		StockQuantity: req.StockQuantity,
 		IsActive:      true,
 	}
 
@@ -62,6 +63,9 @@ func (uc *InventoryUseCase) UpdateProduct(id uint, req *domain.UpdateProductRequ
 	}
 	if req.MaxStockLevel > 0 {
 		product.MaxStockLevel = req.MaxStockLevel
+	}
+	if req.StockQuantity != nil {
+		product.StockQuantity = *req.StockQuantity
 	}
 	if req.IsActive != nil {
 		product.IsActive = *req.IsActive
